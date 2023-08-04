@@ -1,0 +1,12 @@
+my:
+  server:
+    loader-absolute-path: C:\user\pettository\y2dnl\ytdlp
+    loader-file-name: yt-dlp.exe
+    y2rss-service-url: http://localhost:8080
+    audio-format: mp3
+    target-absolute-path: C:\user\pettository\y2files
+    target-url: http://localhost:8099
+logging:
+  level:
+    root: ERROR
+    farm.giggle: TRACE
