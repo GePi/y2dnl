@@ -1,12 +1,22 @@
-my:
-  server:
-    loader-absolute-path: C:\user\pettository\y2dnl\ytdlp
-    loader-file-name: yt-dlp.exe
-    y2rss-service-url: http://localhost:8080
-    audio-format: mp3
-    target-absolute-path: C:\user\pettository\y2files
-    target-url: http://localhost:8099
+yt-dlp:
+  loader-absolute-path: C:\user\pettository\y2dnl\ytdlp
+  loader-file-name: yt-dlp.exe
+  audio-format: mp3
+  target-absolute-path: C:\user\pettository\y2files
+  target-url: http://localhost:8099
+
+y2rss-api:
+  url: ${Y2RSS_API_URL}
+  username: ${Y2RSS_API_USERNAME}
+  password: ${Y2RSS_API_PASSWORD}
+
 logging:
   level:
     root: ERROR
     farm.giggle: TRACE
+
+minio:
+  access-key: ${MINIO_ACCESS_KEY}
+  secret-key: ${MINIO_SECRET_KEY}
+  endpoint: ${MINIO_ENDPOINT}
+  bucket-name: ${MINIO_BUCKET_NAME}
