@@ -1,13 +1,15 @@
-package farm.giggle.y2dnl.services;
+package farm.giggle.y2dnl.s3services;
 
 import farm.giggle.y2dnl.config.MinioProperties;
 import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
 import io.minio.errors.*;
 import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -58,5 +60,22 @@ public class MinioStorageService {
             throw new RuntimeException(e);
         }
         return url;
+    }
+
+    public void delete(@NotNull String objectName) {
+        String bucketName = minioProperties.getBucketName();
+
+        try {
+            minioClient.removeObject(
+                    RemoveObjectArgs
+                            .builder()
+                            .bucket(bucketName)
+                            .object(objectName)
+                            .build());
+        } catch (ErrorResponseException | InsufficientDataException | InternalException | InvalidKeyException |
+                 InvalidResponseException | IOException | NoSuchAlgorithmException | ServerException |
+                 XmlParserException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

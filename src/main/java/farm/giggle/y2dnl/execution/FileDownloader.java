@@ -1,7 +1,10 @@
-package farm.giggle.y2dnl.services;
+package farm.giggle.y2dnl.execution;
 
 import farm.giggle.y2dnl.dto.ExchangeFileFormatDTO;
 import farm.giggle.y2dnl.config.YtDlpProperties;
+import farm.giggle.y2dnl.s3services.MinioStorageService;
+import farm.giggle.y2dnl.services.DownloadedFile;
+import farm.giggle.y2dnl.services.RestApiClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -11,14 +14,14 @@ import java.time.LocalDateTime;
 
 @Component
 @Slf4j
-public class FileDownloadService {
+public class FileDownloader {
 
     final YtDlpProperties ytDlpProperties;
     private final RestApiClientService restApiClientService;
     private final MinioStorageService minioStorageService;
 
 
-    public FileDownloadService(YtDlpProperties ytDlpProperties, RestApiClientService restApiClientService, MinioStorageService minioStorageService) {
+    public FileDownloader(YtDlpProperties ytDlpProperties, RestApiClientService restApiClientService, MinioStorageService minioStorageService) {
         this.ytDlpProperties = ytDlpProperties;
         this.restApiClientService = restApiClientService;
         this.minioStorageService = minioStorageService;
@@ -45,8 +48,8 @@ public class FileDownloadService {
             return;
         }
 
-//        restApiClientService.sendCompletionResponse(
-//                new ExchangeFileFormatDTO(downloadLink, s3link, LocalDateTime.now(Clock.systemUTC())));
+        restApiClientService.sendCompletionResponse(
+                new ExchangeFileFormatDTO(downloadLink, s3link, LocalDateTime.now(Clock.systemUTC())));
     }
 }
 
