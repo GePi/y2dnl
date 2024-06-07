@@ -19,7 +19,7 @@ class MinioStorageServiceTest {
     @Test
     void sendFile() {
         String objectName = "test.txt";
-        String url = minioStorageService.send(() -> Path.of(objectName));
+        String url = minioStorageService.send(() -> Path.of("src", "test", "resources", objectName));
         String requiredUrl = minioProperties.getEndpoint() + "/" + minioProperties.getBucketName() + "/" + objectName;
         assertEquals(requiredUrl, url);
         minioStorageService.delete(objectName);
