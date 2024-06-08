@@ -1,13 +1,16 @@
 package farm.giggle.y2dnl.services;
 
-import farm.giggle.y2dnl.config.YtDlpProperties;
 import farm.giggle.y2dnl.config.Y2RssApiProperties;
+import farm.giggle.y2dnl.config.YtDlpProperties;
 import farm.giggle.y2dnl.dto.ExchangeFileFormatDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 @Service
+@Slf4j
 public class RestApiClientService {
 
     private final RestTemplate restTemplate;
@@ -20,10 +23,15 @@ public class RestApiClientService {
     }
 
     public ExchangeFileFormatDTO GetVideoURLRequest() {
-        ResponseEntity<ExchangeFileFormatDTO> response =
-                restTemplate.getForEntity(y2RssApiProperties.getURLMethodGetFileToDownload(), ExchangeFileFormatDTO.class);
-        if (HttpStatus.OK.equals(response.getStatusCode())) {
-            return response.getBody();
+        try {
+            ResponseEntity<ExchangeFileFormatDTO> response =
+                    restTemplate.getForEntity(y2RssApiProperties.getURLMethodGetFileToDownload(), ExchangeFileFormatDTO.class);
+            if (HttpStatus.OK.equals(response.getStatusCode())) {
+                return response.getBody();
+            }
+
+        } catch (RestClientException ex) {
+            log.error("Failed to establish API connection", ex);
         }
         return null;
     }
@@ -32,6 +40,6 @@ public class RestApiClientService {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<ExchangeFileFormatDTO> httpEntity = new HttpEntity<>(exchangeFileFormatDTO, headers);
-        ResponseEntity<String> hhh = restTemplate.exchange(y2RssApiProperties.getURLMethodPutDownloadedFile(), HttpMethod.PUT, httpEntity, String.class);
+        restTemplate.exchange(y2RssApiProperties.getURLMethodPutDownloadedFile(), HttpMethod.PUT, httpEntity, String.class);
     }
 }

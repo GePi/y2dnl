@@ -10,15 +10,25 @@ import java.io.File;
 @Configuration
 @ConfigurationProperties(prefix = "yt-dlp")
 public class YtDlpProperties {
-    /** Имя файла yt-dlp */
+    /**
+     * Имя файла yt-dlp
+     */
     private String loaderFileName;
-    /** Абсолютный путь на сервере к файлу yt-dlp  */
+    /**
+     * Абсолютный путь на сервере к файлу yt-dlp
+     */
     private String loaderAbsolutePath;
-    /** Формат аудио */
+    /**
+     * Формат аудио
+     */
     private AudioFormat audioFormat;
-    /** Абсолютный путь, куда выкладывать файлы */
+    /**
+     * Абсолютный путь, куда выкладывать файлы
+     */
     private String targetAbsolutePath;
-    /** URL по которому будут скачиваться файлы */
+    /**
+     * URL по которому будут скачиваться файлы
+     */
     private String targetUrl;
 
     public String getLoaderPath() {

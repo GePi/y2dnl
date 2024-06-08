@@ -1,19 +1,25 @@
 yt-dlp:
-  loader-absolute-path: C:\user\pettository\y2dnl\ytdlp
-  loader-file-name: yt-dlp.exe
-  audio-format: mp3
-  target-absolute-path: C:\user\pettository\y2files
-  target-url: http://localhost:8099
+  loader-absolute-path: ${LOADER_ABSOLUTE_PATH}
+  loader-file-name: ${LOADER_FILE_NAME}
+  audio-format: ${AUDIO_FORMAT}
+  target-absolute-path: ${TARGET_ABSOLUTE_PATH}
+  target-url: ${TARGET_URL}
 
 y2rss-api:
   url: ${Y2RSS_API_URL}
   username: ${Y2RSS_API_USERNAME}
   password: ${Y2RSS_API_PASSWORD}
 
+scheduler:
+  core-pool-size: ${CORE_POOL_SIZE}
+  max-pool-size: ${MAX_POOL_SIZE}
+  queue-capacity: ${QUEUE_CAPACITY}
+  scheduled-delay-ms: ${SCHEDULED_DELAY_MS}
+
 logging:
   level:
-    root: ERROR
-    farm.giggle: TRACE
+    root: ${LOGIN_LEVEL_ROOT}
+    farm.giggle: ${LOGIN_LEVEL_APPLICATION_MAIN_PACKET}
 
 minio:
   access-key: ${MINIO_ACCESS_KEY}

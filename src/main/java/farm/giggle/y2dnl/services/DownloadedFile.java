@@ -43,9 +43,6 @@ public class DownloadedFile {
             if (call_YTDLP_forDownload(fileNameAudio, fileNameOutput, paramAudioFormat, videoURl) == 0) {
                 if (Files.exists(Path.of(fileNameAudioFull))) {
                     return true;
-//                    java.nio.file.attribute.FileTime fileTime = Files.getLastModifiedTime(downloadedFilePath);
-//                    LocalDateTime localDateTime = LocalDateTime.ofInstant(fileTime.toInstant(), ZoneOffset.UTC);
-//                    downloadedFiles.add(new ExchangeFileFormatDTO(file.getVideoUrl(), fileUrl, localDateTime));
                 }
             }
         } catch (Exception e) {
@@ -61,18 +58,10 @@ public class DownloadedFile {
                 "-o" + fileNameAudio,
                 "--extract-audio", paramAudioFormat,
                 videoUrl);
-//        ProcessBuilder pb = new ProcessBuilder(
-//                envConfig.getLoaderPath(),
-//                "-P " + "\"" + envConfig.getTargetAbsolutePath() + "\"",
-//                "-o \"" + fileNameAudio + "\"",
-//                "--extract-audio", paramAudioFormat,
-//                videoUrl);
         pb.redirectOutput(new File(fileNameOutput));
         pb.directory(new File(envConfig.getLoaderAbsolutePath()));
         Process process = pb.start();
         int exitCode = process.waitFor();
-        log.debug("Downloaded result " + exitCode);
-        //int exitCode = 0;
         log.debug("Downloaded result: " + exitCode + ", file: " + envConfig.getTargetUrl() + File.separator + fileNameAudio);
         return exitCode;
     }

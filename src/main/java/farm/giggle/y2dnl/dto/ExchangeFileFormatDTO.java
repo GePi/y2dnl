@@ -21,7 +21,7 @@ public class ExchangeFileFormatDTO {
     private String downloadedUrl;
     private LocalDateTime downloadedAt;
 
-    public ExchangeFileFormatDTO( @NotNull UUID journalID, @NonNull LocalDateTime processingTime, @NotNull String videoUrl,
+    public ExchangeFileFormatDTO(@NotNull UUID journalID, @NonNull LocalDateTime processingTime, @NotNull String videoUrl,
                                  String downloadedUrl, LocalDateTime downloadedAt) {
         this.journalID = journalID;
         this.videoUrl = videoUrl;
@@ -36,5 +36,9 @@ public class ExchangeFileFormatDTO {
         this.processingTime = downloadLink.getProcessingTime();
         this.downloadedUrl = downloadedUrl;
         this.downloadedAt = downloadedAt;
+    }
+
+    public String getFileDescriptor() {
+        return journalID + " " + processingTime;
     }
 }

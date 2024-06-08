@@ -10,7 +10,7 @@
     </parent>
     <groupId>farm.giggle</groupId>
     <artifactId>y2dnl</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <name>y2dnl</name>
     <description>y2dnl</description>
     <properties>

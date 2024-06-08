@@ -12,6 +12,7 @@ public class Y2RssApiProperties {
     private final String methodGetFileToDownload = "/getFileToDownload";
     private final String methodPutDownloadedFile = "/putDownloadedFile";
     /** URL сервиса обрабатывающего RSS */
+    @Getter
     private String url;
     /** Имя пользователя basic авторизации сервиса RSS */
     @Getter

@@ -5,34 +5,26 @@ import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.errors.MinioException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.concurrent.Executor;
 
 @Configuration
 @EnableScheduling
 @Slf4j
 public class ApplicationConfig {
-    private final Y2RssApiProperties y2RssApiProperties;
-    private final MinioProperties minioProperties;
-
-    public ApplicationConfig(Y2RssApiProperties y2RssApiProperties, MinioProperties minioProperties) {
-        this.y2RssApiProperties = y2RssApiProperties;
-        this.minioProperties = minioProperties;
-    }
 
     @Bean
-    public RestTemplate getBeanRestTemplate(RestTemplateBuilder builder) {
+    public RestTemplate getBeanRestTemplate(RestTemplateBuilder builder, Y2RssApiProperties y2RssApiProperties) {
         RestTemplate restTemplate = builder
                 .basicAuthentication(y2RssApiProperties.getUsername(), y2RssApiProperties.getPassword())
                 .build();
@@ -41,7 +33,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public MinioClient getBeanMinioClient() {
+    public MinioClient getBeanMinioClient(MinioProperties minioProperties) {
         MinioClient minioClient = null;
         try {
             minioClient =
@@ -63,5 +55,16 @@ public class ApplicationConfig {
             throw new RuntimeException(e);
         }
         return minioClient;
+    }
+
+    @Bean
+    public Executor taskExecutor(SchedulerProperties prop) {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(prop.getCorePoolSize());
+        executor.setMaxPoolSize(prop.getMaxPoolSize());
+        executor.setQueueCapacity(prop.getQueueCapacity());
+        executor.setThreadNamePrefix("FileDownloader-");
+        executor.initialize();
+        return executor;
     }
 }
