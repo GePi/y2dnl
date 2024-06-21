@@ -4,6 +4,7 @@ import farm.giggle.y2dnl.config.Y2RssApiProperties;
 import farm.giggle.y2dnl.config.YtDlpProperties;
 import farm.giggle.y2dnl.dto.ExchangeFileFormatDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
@@ -17,7 +18,7 @@ public class RestApiClientService {
     private final Y2RssApiProperties y2RssApiProperties;
 
 
-    public RestApiClientService(RestTemplate restTemplate, YtDlpProperties envConfig, Y2RssApiProperties y2RssApiProperties) {
+    public RestApiClientService(@Qualifier("getBeanRestTemplate") RestTemplate restTemplate, YtDlpProperties envConfig, Y2RssApiProperties y2RssApiProperties) {
         this.restTemplate = restTemplate;
         this.y2RssApiProperties = y2RssApiProperties;
     }

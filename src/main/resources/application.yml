@@ -26,3 +26,4 @@ minio:
   secret-key: ${MINIO_SECRET_KEY}
   endpoint: ${MINIO_ENDPOINT}
   bucket-name: ${MINIO_BUCKET_NAME}
+  trace-on: ${MINIO_TRACE_ON}

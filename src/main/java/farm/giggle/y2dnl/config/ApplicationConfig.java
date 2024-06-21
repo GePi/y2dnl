@@ -36,11 +36,17 @@ public class ApplicationConfig {
     public MinioClient getBeanMinioClient(MinioProperties minioProperties) {
         MinioClient minioClient = null;
         try {
+            log.info("minio endpoint = " + minioProperties.getEndpoint());
+            log.info("minio_access_key = " + minioProperties.getAccessKey());
+            log.info("minio_secure_key = " + minioProperties.getSecretKey());
             minioClient =
                     MinioClient.builder()
-                            .endpoint(minioProperties.getEndpoint())
                             .credentials(minioProperties.getAccessKey(), minioProperties.getSecretKey())
+                            .endpoint(minioProperties.getEndpoint(), 443, true)
                             .build();
+            if (minioProperties.getTraceOn()) {
+                minioClient.traceOn(System.out);
+            }
             boolean found =
                     minioClient.bucketExists(BucketExistsArgs.builder().bucket(minioProperties.getBucketName()).build());
             if (!found) {

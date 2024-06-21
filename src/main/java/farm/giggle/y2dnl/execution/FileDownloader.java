@@ -8,6 +8,7 @@ import farm.giggle.y2dnl.services.DownloadedFile;
 import farm.giggle.y2dnl.services.RestApiClientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.task.TaskRejectedException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
@@ -37,17 +38,18 @@ public class FileDownloader {
 
     @Scheduled(fixedDelay = 5000)
     public void fetchAndProcessFile() {
-        if (schedulerProperties.getQueueCapacity() < executor.getQueueSize()) {
-            log.info("Queue is full. Skipping fetch until next scheduled run.");
-            return;
+        try {
+            executor.execute(() -> {
+                ExchangeFileFormatDTO downloadLink = restApiClientService.GetVideoURLRequest();
+                if (downloadLink == null) {
+                    return;
+                }
+                log.info("Starting processing for file [" + downloadLink.getFileDescriptor() + ", video link " + downloadLink.getVideoUrl() + "]");
+                processDownloadLink(downloadLink);
+            });
+        } catch (TaskRejectedException ignored) {
+            log.debug("Reject execution ", ignored);
         }
-
-        ExchangeFileFormatDTO downloadLink = restApiClientService.GetVideoURLRequest();
-        if (downloadLink == null) {
-            return;
-        }
-        log.info("Starting processing for file [" + downloadLink.getFileDescriptor() + ", video link " + downloadLink.getVideoUrl() + "]");
-        executor.execute(() -> processDownloadLink(downloadLink));
     }
 
     private void processDownloadLink(ExchangeFileFormatDTO downloadLink) {
@@ -64,9 +66,9 @@ public class FileDownloader {
             }
 
             restApiClientService.sendCompletionResponse(
-                    new ExchangeFileFormatDTO(downloadLink, s3link, LocalDateTime.now(Clock.systemUTC())));
+                    new ExchangeFileFormatDTO(downloadLink, s3link, LocalDateTime.now(Clock.systemUTC()), (int) downloadedFile.getAudioFile().toFile().length()));
 
-            log.info("File has been processed successfully [" + downloadLink.getFileDescriptor() + ", resulting file " + downloadedFile.getAudioFile()+"]");
+            log.info("File has been processed successfully [" + downloadLink.getFileDescriptor() + ", resulting file " + downloadedFile.getAudioFile() + "]");
         } catch (Exception exception) {
             log.error("Error processing link: " + downloadLink.getFileDescriptor(), exception);
         }
